@@ -1,0 +1,181 @@
+package codigo;
+
+import java_cup.runtime.Symbol;
+
+parser code
+{:
+    private Symbol s;
+    
+    public void syntax_error(Symbol s){
+        this.s = s;
+    }
+
+    public Symbol getS(){
+        return this.s;
+}
+:};
+
+terminal  Hash, Include,
+    Const,
+    Inteiro,
+    Double,
+    Caractere,
+    Se,
+    Senao,
+    Ler,
+    Float,
+    Imprimir,
+    Principal,
+    Retorna,
+    Lib,
+    Enquanto,
+    Para,
+    Uniao,
+    MaisMais,
+    MenosMenos,
+    Ou,
+    Equivalente,
+    AbreP,
+    FechaP,
+    AbreCO,
+    FechaCO,
+    AbreCH,
+    FechaCH,
+    Mais,
+    Menos,
+    AspasD,
+    Divisao,
+    Porcentagem,
+    Multiplicacao,
+    Menor,
+    Maior,
+    Igual,
+    Diferente,
+    MaiorIgual,
+    MenorIgual,
+    Virgula,
+    Pv,
+    Id,
+    Literal,
+    Numero;
+
+non terminal INICIO, COMANDO, MAISCONST, TIPO, LISTAIDS, DECLARACAO, ATRIBUICAO,
+EXPRESSAO, COMANDOS, REPETICAO, FOR, MI, MM, WHILE,
+COMPARACAO, VARIAVEL, IF, LER, IMPRIMIR, SOMA, DIVISAO,
+SUBTRACAO, MULTIPLICACAO, PARENTES, IF_ELSE, JUNCAO, PORCENTAGEM,
+ARITMETICAS, ATRIBUICAO_VET, PARENTES_IF, JUNCAO_EX;
+
+
+start with INICIO;
+
+INICIO ::= 
+Hash Include Lib Inteiro Principal AbreP FechaP AbreCH  COMANDO Retorna Numero Pv FechaCH |
+Hash Include Lib Hash Const Id Numero MAISCONST Inteiro Principal AbreP FechaP AbreCH COMANDO Retorna Numero Pv FechaCH
+;
+
+MAISCONST ::= Hash Const Id Numero MAISCONST | Hash Const Id Menos Numero MAISCONST |
+;
+
+TIPO ::= Inteiro | Double | Caractere | Float
+;
+
+LISTAIDS ::= Id Virgula LISTAIDS | AspasD Id AspasD Virgula LISTAIDS | Id |
+AspasD Id AspasD | Id AbreCO VARIAVEL FechaCO Virgula LISTAIDS |
+Id AbreCO VARIAVEL FechaCO | Id AbreCO VARIAVEL FechaCO AbreCO VARIAVEL FechaCO |
+Id AbreCO VARIAVEL FechaCO AbreCO VARIAVEL FechaCO Virgula LISTAIDS
+;
+
+DECLARACAO ::= TIPO LISTAIDS Pv | TIPO LISTAIDS Pv DECLARACAO 
+;
+
+COMANDO ::= DECLARACAO COMANDOS |
+;
+
+ATRIBUICAO_VET ::= Id AbreCO VARIAVEL FechaCO Igual EXPRESSAO Pv |
+Id AbreCO VARIAVEL FechaCO AbreCO VARIAVEL FechaCO Igual EXPRESSAO Pv
+;
+
+ATRIBUICAO ::= Id Igual EXPRESSAO Pv
+;
+
+EXPRESSAO ::= SOMA | SUBTRACAO | MULTIPLICACAO | DIVISAO |  PARENTES | VARIAVEL | PORCENTAGEM | JUNCAO_EX
+;
+
+JUNCAO_EX::= VARIAVEL Ou EXPRESSAO | VARIAVEL Uniao EXPRESSAO 
+;
+
+PORCENTAGEM ::= VARIAVEL Porcentagem EXPRESSAO
+;
+
+SOMA ::=  VARIAVEL Mais  EXPRESSAO
+;
+
+SUBTRACAO ::= VARIAVEL Menos EXPRESSAO
+;
+
+MULTIPLICACAO ::= VARIAVEL Multiplicacao EXPRESSAO
+;
+
+DIVISAO ::= VARIAVEL Divisao EXPRESSAO
+;
+
+PARENTES ::= AbreP EXPRESSAO FechaP ARITMETICAS EXPRESSAO | AbreP EXPRESSAO FechaP
+;
+
+ARITMETICAS ::= Mais | Menos | Divisao | Multiplicacao | Porcentagem
+;
+
+COMANDOS ::= REPETICAO COMANDOS | IF COMANDOS | LER COMANDOS | IMPRIMIR COMANDOS |
+ATRIBUICAO COMANDOS | IF_ELSE COMANDOS | ATRIBUICAO_VET COMANDOS | 
+;
+
+REPETICAO ::= FOR  | WHILE 
+;
+
+FOR ::= Para AbreP Id Igual VARIAVEL Pv Id MI VARIAVEL Pv Id MM FechaP AbreCH COMANDOS FechaCH
+;
+
+MI ::= MaiorIgual | MenorIgual | Maior | Menor
+;
+
+MM ::= MaisMais | MenosMenos
+;
+
+WHILE ::= Enquanto AbreP VARIAVEL JUNCAO COMPARACAO VARIAVEL FechaP AbreCH COMANDOS FechaCH |
+Enquanto AbreP Id FechaP AbreCH COMANDOS FechaCH
+;
+
+COMPARACAO ::= MaiorIgual | MenorIgual | Equivalente | Diferente | Maior | Menor 
+;
+
+VARIAVEL ::= Id | Numero | Id AbreCO Id FechaCO | Id AbreCO Numero FechaCO
+;
+
+JUNCAO ::= Ou VARIAVEL JUNCAO | Uniao VARIAVEL JUNCAO |
+;
+
+IF ::= Se AbreP VARIAVEL JUNCAO COMPARACAO PARENTES_IF FechaP AbreCH COMANDOS FechaCH 
+;
+
+IF_ELSE ::= Se AbreP VARIAVEL JUNCAO COMPARACAO PARENTES_IF FechaP AbreCH COMANDOS FechaCH Senao AbreCH COMANDOS FechaCH
+;
+
+PARENTES_IF ::= AbreP VARIAVEL JUNCAO ARITMETICAS PARENTES_IF FechaP | VARIAVEL
+;
+
+LER ::= Ler AbreP Id FechaP Pv
+;
+
+IMPRIMIR ::= Imprimir AbreP Literal FechaP Pv | Imprimir AbreP LISTAIDS FechaP Pv
+;
+
+
+
+
+
+
+
+
+
+
+
